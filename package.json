@@ -1,0 +1,23 @@
+{
+  "name": "varlink",
+  "version": "1.0.0",
+  "description": "a varlink client and server implementation",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "pegjs -o lib/parser.js lib/grammar/varlink.pegjs",
+    "test": "mocha test/client.js"
+  },
+  "keywords": [
+    "varlink"
+  ],
+  "author": "Nathan LaFreniere <quitlahok@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "pegjs": "^0.10.0"
+  },
+  "dependencies": {
+    "joi": "^14.3.1"
+  }
+}

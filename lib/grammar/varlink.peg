@@ -1,0 +1,82 @@
+whitespace /* Modeled after ECMA-262, 5th ed., 7.2. \v\f removed */
+    = [ \t\u{00A0}\u{FEFF}\u{1680}\u{180E}\u{2000}-\u{200A}\u{202F}\u{205F}\u{3000}]
+
+eol_r /* Modeled after ECMA-262, 5th ed., 7.3. */
+  = "\n"
+  / "\r\n"
+  / "\r"
+  / "\u{2028}"
+  / "\u{2029}"
+
+comment
+    = "#" [^\n\r\u{2028}\u{2029}]* eol_r
+
+eol
+    = whitespace* eol_r
+    / comment
+
+_
+    = whitespace / comment / eol_r
+
+field_name
+    = [A-Za-z]('_'?[A-Za-z0-9])*
+
+name
+    = [A-Z][A-Za-z0-9]*
+
+interface_name
+    = [a-z]([-]* [a-z0-9])* ( '.' [a-z0-9]([-]*[a-z0-9])* )+
+
+dict
+    = "[string]"
+
+array
+    = "[]"
+
+maybe
+    = "?"
+
+element_type
+    = "bool"
+    / "int"
+    / "float"
+    / "string"
+    / "object"
+    / name
+    / venum
+    / vstruct
+
+type
+    = element_type
+    / maybe element_type
+    / array type
+    / dict type
+    / maybe array type
+    / maybe dict type
+
+venum
+    = '(' ( field_name ** ',' ) _* ')'
+
+argument
+    = _* field_name _* ':' _* type
+
+vstruct
+    = '(' ( argument ** ',' ) _* ')'
+
+vtypedef
+    = "type" _+ name _* vstruct
+    / "type" _+ name _* venum
+
+error
+    = "error" _+ name _* vstruct
+
+method
+    = "method" _+ name _* vstruct _* "->" _* vstruct
+
+member
+    = _* m:method
+    / _* t:vtypedef
+    / _* e:error
+
+interface
+    = _* "interface" _+ interface_name eol ( member ++ eol ) _*
